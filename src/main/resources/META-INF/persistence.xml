@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this template
--->
-
-
-
-<root>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
     
-</root>
+    <!-- Nome da unidade deve ser idêntico ao usado no Persistence.createEntityManagerFactory -->
+    <persistence-unit name="gerenciamento_curso" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- Indica ao Hibernate qual classe ele deve mapear -->
+        <class>br.com.ifba.curso.entity.Curso</class>
+        
+        <properties>
+            <!-- Endereço do banco: servidor local, porta padrão 5432 e o nome que você criou no pgAdmin -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/gerenciamento_curso"/>
+            
+            <!-- Driver específico do PostgreSQL -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            
+            <!-- Credenciais de acesso: usuário padrão e sua senha personalizada -->
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="Loathe"/>
 
+            <!-- Dialeto: ensina o Hibernate a "falar" a variação específica de SQL do PostgreSQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            
+            <!-- Exibe no console do NetBeans os comandos SQL que o Java está executando -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            
+            <!-- 'update': Cria a tabela automaticamente ou atualiza se você adicionar campos na classe -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>

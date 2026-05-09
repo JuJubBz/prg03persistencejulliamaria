@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.mave n.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.mycompany</groupId>
     <artifactId>prg03persistenciajulliamaria</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -17,40 +16,39 @@
     </properties>
 
     <dependencies>
-
-        <!-- Jakarta Persistence (JPA) -->
+        <!-- Jakarta Persistence (JPA) - Interface padrão para persistência -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
         </dependency>
 
-        <!-- Hibernate (implementação da JPA) -->
+        <!-- Hibernate Core - O motor que transforma suas classes em tabelas SQL -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.4.4.Final</version>
         </dependency>
 
-        <!-- Banco H2 (para testes) -->
+        <!-- Driver JDBC do PostgreSQL - ESSENCIAL para conectar ao banco físico -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.224</version>
-            <scope>runtime</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
         </dependency>
 
-        <!-- Log (necessário pro Hibernate funcionar direitinho) -->
+        <!-- SLF4J Simple - Necessário para que o Hibernate exiba logs de erro/sucesso -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.12</version>
         </dependency>
+
+        <!-- Layout para interface gráfica, caso seu projeto utilize Swing -->
         <dependency>
             <groupId>org.netbeans.external</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>RELEASE290</version>
         </dependency>
     </dependencies>
-
 </project>

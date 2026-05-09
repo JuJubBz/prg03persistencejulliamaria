@@ -4,6 +4,13 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.entity.Curso;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Julia Freitas
@@ -49,6 +56,11 @@ public class CursoListar extends javax.swing.JFrame {
                 "Nome", "Quantidade", "Descrição", "Instituição", "Remover", "Editar"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 137, 706, 375));
@@ -81,9 +93,9 @@ public class CursoListar extends javax.swing.JFrame {
         jButton1.addActionListener(this::jButton1ActionPerformed);
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 50, 32, 28));
 
-        jButton2.setText("HOMESCREEN");
+        jButton2.setText("PESQUISAR");
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 50, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -93,13 +105,66 @@ public class CursoListar extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int linha = jTable1.getSelectedRow();
+    int coluna = jTable1.getSelectedColumn();
+    
+    // Supondo que a coluna 4 seja a Lixeira (Remover)
+    if (coluna == 4) { 
+        removerCurso(linha);
+    }
+    
+    // Supondo que a coluna 5 seja o Lápis (Editar)
+    if (coluna == 5) {
+        editarCurso(linha);
+    }
+    }//GEN-LAST:event_jTable1MouseClicked
+    private void removerCurso(int linha) {
+    // Pega o ID que está na primeira coluna da linha selecionada
+    Long id = (Long) jTable1.getValueAt(linha, 0); 
+    
+    int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este curso?");
+    
+    if (resposta == JOptionPane.YES_OPTION) {
+        EntityManager em = getEM();
+        try {
+            em.getTransaction().begin();
+            Curso c = em.find(Curso.class, id); // Procura o curso no banco
+            if (c != null) {
+                em.remove(c); // Remove se encontrar
+            }
+            em.getTransaction().commit();
+            
+            JOptionPane.showMessageDialog(this, "Curso removido com sucesso!");
+            atualizarTabela(); // Atualiza a lista na tela
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            JOptionPane.showMessageDialog(this, "Erro ao remover: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+}
+    
+    private void editarCurso(int linha) {
+    Long id = (Long) jTable1.getValueAt(linha, 0);
+    
+    // Aqui você pode apenas abrir a tela de cadastro para o usuário editar
+    // Ou pode buscar o curso e passar para a tela de salvar
+    CursoSave telaSalvar = new CursoSave();
+    telaSalvar.setVisible(true);
+    
+    // Dica: Para um sistema real, você passaria o ID para o CursoSave
+    // para ele carregar os dados nos campos de texto.
+}
+    
     /**
      * @param args the command line arguments
      */
@@ -124,7 +189,30 @@ public class CursoListar extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new CursoListar().setVisible(true));
     }
+    
+    public void atualizarTabela() {
+    EntityManager em = getEM();
+    try {
+        List<Curso> lista = em.createQuery("from Curso", Curso.class).getResultList();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setNumRows(0); 
 
+        for (Curso c : lista) {
+            model.addRow(new Object[]{
+                c.getId(), c.getNome(), c.getQuantidade(), c.getDescricao(), c.getInstituicao()
+            });
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Erro ao listar: " + e.getMessage());
+    } finally {
+        em.close();
+    }
+}
+    
+    private EntityManager getEM() {
+    return Persistence.createEntityManagerFactory("cursos-pu").createEntityManager();
+}
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
