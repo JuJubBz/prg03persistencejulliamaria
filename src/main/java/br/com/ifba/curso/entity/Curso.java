@@ -1,44 +1,26 @@
 package br.com.ifba.curso.entity;
 
+import br.com.ifba.infrastructure.entity.PersistenceEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import java.io.Serializable;
 
 /**
- * Entidade que representa um Curso no sistema.
- * Mapeada para o banco de dados via JPA/Hibernate.
- * * 
+ * Entidade Curso
  */
 @Entity
-public class Curso implements Serializable {
+public class Curso extends PersistenceEntity implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único gerado automaticamente pelo banco
+    private static final long serialVersionUID = 1L;
 
     private String nome;
     private String descricao;
     private int quantidade;
     private String instituicao;
 
-    /**
-     * Construtor padrão sem argumentos.
-     * Necessário para o funcionamento do framework Hibernate.
-     */
     public Curso() {
     }
 
-    // --- Métodos de Acesso (Getters e Setters) ---
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // getters e setters (SEM id!)
 
     public String getNome() {
         return nome;
