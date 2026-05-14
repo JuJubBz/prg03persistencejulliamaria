@@ -4,12 +4,17 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
+import br.com.ifba.curso.entity.Curso;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Julia Freitas
  */
 public class CursoSave extends javax.swing.JFrame {
-    
+    private final CursoIController cursoIController = new CursoController();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoSave.class.getName());
 
     /**
@@ -17,6 +22,19 @@ public class CursoSave extends javax.swing.JFrame {
      */
     public CursoSave() {
         initComponents();
+        
+        // Garante que os campos estão habilitados para digitação
+    txtNome.setEnabled(true);
+    txtDescricao.setEnabled(true);
+    txtQuantidade.setEnabled(true);
+    txtInstituicao.setEnabled(true);
+
+    // Define a cor do texto como preto (para ficar visível)
+    txtNome.setForeground(java.awt.Color.BLACK);
+    txtDescricao.setForeground(java.awt.Color.BLACK);
+    txtQuantidade.setForeground(java.awt.Color.BLACK);
+    txtInstituicao.setForeground(java.awt.Color.BLACK);
+        
     }
 
     /**
@@ -29,13 +47,13 @@ public class CursoSave extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtNome = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtQuantidade = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtDescricao = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtInstituicao = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -45,6 +63,8 @@ public class CursoSave extends javax.swing.JFrame {
         jLabel1.setText("NOME DO CURSO:");
 
         jLabel2.setText("QUANTIDADE");
+
+        txtQuantidade.addActionListener(this::txtQuantidadeActionPerformed);
 
         jLabel3.setText("DESCRIÇÃO");
 
@@ -70,12 +90,12 @@ public class CursoSave extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 245, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtNome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(txtQuantidade, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtDescricao, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtInstituicao, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(114, 114, 114))
             .addGroup(layout.createSequentialGroup()
                 .addGap(239, 239, 239)
@@ -96,19 +116,19 @@ public class CursoSave extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtQuantidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(73, 73, 73)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(76, 76, 76)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtInstituicao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -120,12 +140,47 @@ public class CursoSave extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+            
+      try {
+    // Cria um novo objeto Curso que será preenchido com os dados da tela
+    Curso curso = new Curso();
+
+    // Captura os dados digitados pelo usuário nos campos da interface (View)
+    curso.setNome(txtNome.getText());
+    curso.setDescricao(txtDescricao.getText());
+    curso.setInstituicao(txtInstituicao.getText());
+
+    try {
+        // Converte o valor digitado (String) para inteiro
+        // Caso o usuário digite algo inválido (letras), será lançada exceção
+        curso.setQuantidade(Integer.parseInt(txtQuantidade.getText()));
+    } catch (NumberFormatException e) {
+        // Trata erro de conversão e lança uma exceção com mensagem amigável
+        throw new RuntimeException("Quantidade deve ser um número");
+    }
+
+    // Envia o objeto Curso para o Controller
+    // O Controller repassa para o Service, onde ficam as regras de negócio
+    cursoIController.save(curso);
+
+    // Exibe mensagem de sucesso para o usuário
+    JOptionPane.showMessageDialog(null, "Curso salvo com sucesso!");
+
+} catch (Exception e) {
+    // Captura qualquer erro ocorrido (validação, conversão, etc.)
+    // e exibe a mensagem para o usuário
+    JOptionPane.showMessageDialog(null, e.getMessage());
+}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // Fecha a janela atual (CursoSave)
+        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtQuantidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantidadeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtQuantidadeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,9 +215,9 @@ public class CursoSave extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField txtDescricao;
+    private javax.swing.JTextField txtInstituicao;
+    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtQuantidade;
     // End of variables declaration//GEN-END:variables
 }

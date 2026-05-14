@@ -4,6 +4,8 @@
  */
 package br.com.ifba.curso.view;
 
+import br.com.ifba.curso.controller.CursoController;
+import br.com.ifba.curso.controller.CursoIController;
 import br.com.ifba.curso.entity.Curso;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
@@ -16,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Julia Freitas
  */
 public class CursoListar extends javax.swing.JFrame {
-    
+    private final CursoIController cursoController = new CursoController();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CursoListar.class.getName());
 
     /**
@@ -63,7 +65,7 @@ public class CursoListar extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 137, 706, 375));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 130, 700, 375));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -105,11 +107,47 @@ public class CursoListar extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+    
+    String nome = jTextField1.getText();
+
+    try {
+        List<Curso> lista;
+
+        if (nome == null || nome.trim().isEmpty()) {
+            lista = cursoController.findAll();
+        } else {
+            lista = cursoController.findByNome(nome); // (se implementar)
+        }
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setNumRows(0);
+
+        for (Curso c : lista) {
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getQuantidade(),
+                c.getDescricao(),
+                c.getInstituicao(),
+                "Remover",
+                "Editar"
+            });
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, e.getMessage());
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // Cria uma nova instância da tela de cadastro de curso
+    CursoSave telaCadastro = new CursoSave();
+
+    // Centraliza a janela na tela (opcional, mas recomendado)
+    telaCadastro.setLocationRelativeTo(null);
+
+    // Torna a janela visível para o usuário
+    telaCadastro.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -126,29 +164,21 @@ public class CursoListar extends javax.swing.JFrame {
         editarCurso(linha);
     }
     }//GEN-LAST:event_jTable1MouseClicked
-    private void removerCurso(int linha) {
-    // Pega o ID que está na primeira coluna da linha selecionada
-    Long id = (Long) jTable1.getValueAt(linha, 0); 
-    
+   private void removerCurso(int linha) {
+    Long id = (Long) jTable1.getValueAt(linha, 0);
+
     int resposta = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir este curso?");
-    
+
     if (resposta == JOptionPane.YES_OPTION) {
-        EntityManager em = getEM();
         try {
-            em.getTransaction().begin();
-            Curso c = em.find(Curso.class, id); // Procura o curso no banco
-            if (c != null) {
-                em.remove(c); // Remove se encontrar
-            }
-            em.getTransaction().commit();
-            
+            Curso curso = cursoController.findById(id);
+            cursoController.delete(curso);
+
             JOptionPane.showMessageDialog(this, "Curso removido com sucesso!");
-            atualizarTabela(); // Atualiza a lista na tela
+            atualizarTabela();
+
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             JOptionPane.showMessageDialog(this, "Erro ao remover: " + e.getMessage());
-        } finally {
-            em.close();
         }
     }
 }
@@ -190,28 +220,33 @@ public class CursoListar extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> new CursoListar().setVisible(true));
     }
     
+   
     public void atualizarTabela() {
-    EntityManager em = getEM();
     try {
-        List<Curso> lista = em.createQuery("from Curso", Curso.class).getResultList();
+        List<Curso> lista = cursoController.findAll();
+
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setNumRows(0); 
+        model.setNumRows(0);
 
         for (Curso c : lista) {
             model.addRow(new Object[]{
-                c.getId(), c.getNome(), c.getQuantidade(), c.getDescricao(), c.getInstituicao()
+                c.getId(),
+                c.getNome(),
+                c.getQuantidade(),
+                c.getDescricao(),
+                c.getInstituicao(),
+                "Remover",
+                "Editar"
             });
         }
+
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Erro ao listar: " + e.getMessage());
-    } finally {
-        em.close();
     }
 }
+
     
-    private EntityManager getEM() {
-    return Persistence.createEntityManagerFactory("cursos-pu").createEntityManager();
-}
+ 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
